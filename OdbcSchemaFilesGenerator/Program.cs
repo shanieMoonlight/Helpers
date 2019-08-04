@@ -85,7 +85,7 @@ namespace OdbcSchemaFilesGenerator
          foreach (var field in fields)
          {
             var camelField = field.UnderscoreToCamelCase();
-            sbFieldsText.AppendLine($@"public readonly string {camelField} = ""{field};""");
+            sbFieldsText.AppendLine($@"public readonly string {camelField} = ""{field}"";");
          }//foreach
 
          return sbFieldsText.ToString();
