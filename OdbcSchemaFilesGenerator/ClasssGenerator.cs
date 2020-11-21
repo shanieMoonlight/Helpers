@@ -38,9 +38,9 @@ namespace OdbcSchemaFilesGenerator
       /// </summary>
       /// <param name="className">name of class</param>
       /// <param name="fields">list of string fields in the class</param>
-      public void CreateColumnClass(string className, string nameSpace, string fields)
+      public void CreateColumnClass(string className, string nameSpace, string fields, string folder = "Columns", string usings = "")
       {
-         CreateClass(className, nameSpace, fields, "Columns");
+         CreateClass(className, nameSpace, fields, folder, usings);
 
       }//CreateClass
 
@@ -65,7 +65,7 @@ namespace OdbcSchemaFilesGenerator
       /// <param name="className">name of class</param>
       /// <param name="fields">list of string fields in the class</param>
       /// <param name="folder">where to put the file</param>
-      private void CreateClass(string className, string nameSpace, string fields, string folder)
+      private void CreateClass(string className, string nameSpace, string fields, string folder, string usings = "")
       {
          //read the Excel file as byte array
          using (var sr = File.OpenText(_classTemplateFilePath))
@@ -74,6 +74,7 @@ namespace OdbcSchemaFilesGenerator
             var classTemplate = sr.ReadToEnd();
             //Replace placeholders
             var newClasstemplate = classTemplate
+               .Replace("--using--", usings)
                .Replace("--fields--", fields)
                .Replace("--classname--", className)
                .Replace("--namespace--", nameSpace);

@@ -1,4 +1,6 @@
-﻿namespace --namespace--
+﻿--using--
+
+namespace --namespace--
 {
    class --classname--
    {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using OdbcSchemaFilesGenerator.Models;
+using System.Collections.Generic;
 using System.Data.Odbc;
 using System.Linq;
 
@@ -27,7 +28,7 @@ namespace OdbcSchemaFilesGenerator
 
                var dtCols = connection.GetSchema("Columns", new[] { connection.DataSource, null, tableName })
                               .AsEnumerable()
-                              .Select(r => r.ItemArray[3])
+                              //.Select(r => r.ItemArray[3])
                               .OrderBy(r => r.ToString());
 
                foreach (var column in dtCols)
@@ -40,6 +41,39 @@ namespace OdbcSchemaFilesGenerator
       }//GetColumnNames
 
       //-------------------------------------------------------------------------------------------------------//
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="connectionString"></param>
+      /// <param name="tableName"></param>
+      /// <returns></returns>
+      public static List<ColumnData> GetAllColumnData(string connectionString, string tableName)
+      {
+         List<ColumnData> dtColsData = new List<ColumnData>();
+
+
+         using (OdbcConnection connection = new OdbcConnection(connectionString))
+         {
+            using (OdbcDataAdapter adapter = new OdbcDataAdapter("", connection))
+            {
+               connection.Open();
+
+               dtColsData = connection.GetSchema("Columns", new[] { connection.DataSource, null, tableName })
+                              .AsEnumerable()
+                              .Select(r => ColumnData.FromDataRow(r))
+                              .OrderBy(cd => cd.Name)
+                              .ToList();
+
+            }//Using
+         }//Using
+
+         return dtColsData;
+
+      }//GetColumnNames
+
+      //-------------------------------------------------------------------------------------------------------//
+
       /// <summary>
       /// 
       /// </summary>

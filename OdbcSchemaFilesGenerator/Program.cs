@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OdbcSchemaFilesGenerator.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -20,7 +21,7 @@ namespace OdbcSchemaFilesGenerator
       static void Main(string[] args)
       {
          //Set strings and genereator first
-         ConnectionString = GetString("Enter connection string:");
+         ConnectionString = GetConnectionStringString();
          ColumnNamespace = GetColumnNamespaceString();
          TableNamespace = GetTableNamespaceString();
          genny = new ClasssGenerator();
@@ -30,6 +31,7 @@ namespace OdbcSchemaFilesGenerator
          foreach (var tableName in GetTableNames())
          {
             CreateColumnClassFile(tableName);
+            CreateColumnDataClassFile(tableName);
          }//foreach
 
          Console.WriteLine("Boom!!");
@@ -72,6 +74,25 @@ namespace OdbcSchemaFilesGenerator
       //----------------------------------------------------------------------------------------------------//
 
       /// <summary>
+      /// Creeate c# file for table columns as string fields
+      /// </summary>
+      /// <param name="tableName">Name of table th ecolumns belong to</param>
+      private static void CreateColumnDataClassFile(string tableName)
+      {
+
+         var className = tableName.UnderscoreToCamelCase() + "ColumnsData";
+
+         //Get Column names
+         var columns = ODBCHelpers.GetAllColumnData(ConnectionString, tableName);
+
+         var strFields = CreateColumnDataFieldString(columns);
+
+         genny.CreateColumnClass(className, ColumnNamespace, strFields, "ColumnData", "using  OdbcSchemaFilesGenerator.Models;");
+      }//CreateColumnClassFile
+
+      //----------------------------------------------------------------------------------------------------//
+
+      /// <summary>
       /// Turn List of strings into  a string of fields
       /// </summary>
       /// <param name="fields">list of fields values/names</param>
@@ -85,7 +106,31 @@ namespace OdbcSchemaFilesGenerator
          foreach (var field in fields)
          {
             var camelField = field.UnderscoreToCamelCase();
-            sbFieldsText.AppendLine($@"public readonly string {camelField} = ""{field}"";");
+            sbFieldsText.AppendLine($@"public const string {camelField} = ""{field}"";");
+         }//foreach
+
+
+         return sbFieldsText.ToString();
+
+      }//CreateColumnClassFile
+
+      //----------------------------------------------------------------------------------------------------//
+
+      /// <summary>
+      /// Turn List of ColumnDatas into  a string of fields
+      /// </summary>
+      /// <param name="colDats">list of fields values/names</param>
+      /// <returns>Single string containing ch style string fields</returns>
+      private static string CreateColumnDataFieldString(IEnumerable<ColumnData> colDats)
+      {
+
+         //Convert to list of fields.
+         StringBuilder sbFieldsText = new StringBuilder();
+
+         foreach (var cd in colDats)
+         {
+            var camelField = cd.Name.UnderscoreToCamelCase();
+            sbFieldsText.AppendLine($@"public static readonly ColumnData {camelField} = {cd.ToPropertyString()};");
          }//foreach
 
          return sbFieldsText.ToString();
@@ -109,7 +154,7 @@ namespace OdbcSchemaFilesGenerator
 
       //----------------------------------------------------------------------------------------------------//
 
-      private static string GetConnectionString()
+      private static string GetConnectionStringString()
       {
          return GetString("Enter connection string:");
       }//GetConnectionString
