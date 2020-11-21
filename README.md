@@ -29,13 +29,12 @@ AccountStatusColumns.cs:
       {
          class AccountStatusColumns
          {
-
-           public const string System.data.datarow = "System.Data.DataRow";
-           public const string System.data.datarow = "System.Data.DataRow";
-           public const string System.data.datarow = "System.Data.DataRow";
-           public const string System.data.datarow = "System.Data.DataRow";
-           public const string System.data.datarow = "System.Data.DataRow";
-           public const string System.data.datarow = "System.Data.DataRow";
+            public const string Number = "NUMBER";
+            public const string OnHold = "ON_HOLD";
+            public const string RecordCreateDate = "RECORD_CREATE_DATE";
+            public const string RecordDeleted = "RECORD_DELETED";
+            public const string RecordModifyDate = "RECORD_MODIFY_DATE";
+            public const string Status = "STATUS";
 
          }//Cls
       }//NS
@@ -44,7 +43,8 @@ AccountStatusColumns.cs:
 Finally it creates a folder of different classes for the data in each column of the table eg.
 
 AccountStatusColumnsData.cs:
-using  OdbcSchemaFilesGenerator.Models;
+
+      using  OdbcSchemaFilesGenerator.Models;
       namespace SgCols
       {
          class AccountStatusColumnsData
@@ -105,7 +105,8 @@ using  OdbcSchemaFilesGenerator.Models;
 
 Copy and paste these files into your solutions and then you can use them in your query strings etc. 
 Like this:
-  string queryString = $@"SELECT 
+      
+      string queryString = $@"SELECT 
                                     {Tables.Customer}.{CustomerColumns.AccountRef},
                                     {Tables.Customer}.{CustomerColumns.Name},
                                     {Tables.Customer}.{CustomerColumns.Address1},
