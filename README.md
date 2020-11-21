@@ -7,6 +7,7 @@ This is a program to create data classes for the tables and columns in your ODBC
 It creates a .cs file for all the tables eg.
 
 Tables.cs:
+
       namespace SgTbls
       {
          class Tables
@@ -23,6 +24,7 @@ Tables.cs:
 
 It then creates a folder of different classes for the columns if each table eg.
 AccountStatusColumns.cs:
+
       namespace SgCols
       {
          class AccountStatusColumns
