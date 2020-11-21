@@ -28,7 +28,7 @@ namespace OdbcSchemaFilesGenerator
 
                var dtCols = connection.GetSchema("Columns", new[] { connection.DataSource, null, tableName })
                               .AsEnumerable()
-                              //.Select(r => r.ItemArray[3])
+                              .Select(r => r.ItemArray[3])
                               .OrderBy(r => r.ToString());
 
                foreach (var column in dtCols)
